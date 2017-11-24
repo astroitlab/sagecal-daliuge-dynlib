@@ -10,17 +10,20 @@
 #include <unistd.h>
 #include <sys/time.h>
 #include "sagecal.h"
-#include "dlg_app.h"
 
 using namespace std;
 using namespace Data;
 
-static inline app_data *to_app_data(dlg_app_info *app)
-{
+typedef struct _app_data {
+    char func[40];
+    char cmdfile[200];
+} app_data;
+
+static inline app_data *to_app_data(dlg_app_info *app) {
     return (app_data *)app->data;
 }
-static inline unsigned long usecs(struct timeval *start, struct timeval *end)
-{
+
+static inline unsigned long usecs(struct timeval *start, struct timeval *end) {
     return (end->tv_sec - start->tv_sec) * 1000000 + (end->tv_usec - start->tv_usec);
 }
 
@@ -175,7 +178,6 @@ int init(dlg_app_info *app, const char ***params)
     app->data = malloc(sizeof(app_data));
     strcpy(to_app_data(app)->func,Data::func);
     strcpy(to_app_data(app)->cmdfile,Data::cmdFile);
-
     return 0;
 }
 
@@ -183,6 +185,7 @@ int run(dlg_app_info *app) {
     struct timeval start, end;
     gettimeofday(&start, NULL);
     printf("------------------slave begin run %s, [%s]------------------\n", app->uid, to_app_data(app)->func);
+    printf("------------------cmdfile: %s------------------\n",to_app_data(app)->cmdfile);
     ParseCmdLine(to_app_data(app)->cmdfile);
 
     double duration = 0.;
@@ -209,6 +212,10 @@ int run(dlg_app_info *app) {
     gettimeofday(&end, NULL);
     duration = usecs(&start, &end) / 1000000.;
     printf("------------------slave end run %s, [%s] used %.3f's------------------\n", app->uid, to_app_data(app)->func, duration);
-    free(app->data);
     return 0;
+}
+
+void drop_completed(dlg_app_info *app, const char *uid, drop_status status) {
+    app->done(APP_FINISHED);
+    free(app->data);
 }

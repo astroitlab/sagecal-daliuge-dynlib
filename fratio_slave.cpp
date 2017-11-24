@@ -19,7 +19,6 @@ int fratio_slave(dlg_app_info *app) {
 
     int sources_precessed = get_last_iter(app->uid);
     openblas_set_num_threads(1);
-
     int flag = 0;
     app->inputs[0].read((char *)&flag, sizeof(int));
     if (flag != 0) {
@@ -29,6 +28,7 @@ int fratio_slave(dlg_app_info *app) {
         load_iodata_dn_noprefix(&(app->inputs[0]), &old_iodata);
         load_mpidata_dn(&(app->inputs[0]),&mpiData);
     }
+
     load_share_iodata(Data::shareDir, old_iodata.msname, &iodata);
     cout << "[fratio_slave]========, iodata.N/M/Mt/Nms:" << iodata.N << "/" << iodata.M  << "/" << iodata.Mt << "/" << iodata.Nms
         << ", iodata.freq0:" << iodata.freq0/ 1e6<< "Mhz" << endl;

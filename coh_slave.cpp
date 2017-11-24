@@ -40,7 +40,6 @@ int coh_slave(dlg_app_info *app) {
     }
 
     load_share_barr(Data::shareDir,iodata.msname, &iodata, barr);
-
     int M = mpiData.Mo;
 
     if ((arho = (double *) calloc((size_t) M, sizeof(double))) == 0) {

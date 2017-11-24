@@ -5,10 +5,14 @@
 
 #include "data.h"
 #include "cmd_master.h"
-#include "dlg_app.h"
 
 using namespace std;
 using namespace Data;
+
+typedef struct _app_data {
+    char func[40];
+    char cmdfile[200];
+} app_data;
 
 static inline app_data *to_app_data(dlg_app_info *app)
 {
@@ -82,7 +86,6 @@ void ParseCmdLine() {
 }
 
 int init(dlg_app_info *app, const char ***params) {
-    short print_stats = 0;
     const char **param;
     while (1) {
         param = *params;
@@ -133,6 +136,10 @@ int run(dlg_app_info *app) {
     gettimeofday(&end, NULL);
     duration = usecs(&start, &end) / 1000000.;
     printf("====================master end run %s, [%s] used %.3f's====================\n", app->uid, Data::func, duration);
-    free(app->data);
     return 0;
+}
+
+void drop_completed(dlg_app_info *app, const char *uid, drop_status status) {
+    app->done(APP_FINISHED);
+    free(app->data);
 }

@@ -14,9 +14,10 @@ using namespace std;
 using namespace Data;
 
 int aux_reader(dlg_app_info *app) {
-
     char table_name[256];
     int len = app->inputs[0].read(table_name,255);
+    cout << "read len:" << len << endl;
+
     table_name[len] = '\0';
 
     Data::IOData iodata;
@@ -26,8 +27,7 @@ int aux_reader(dlg_app_info *app) {
     iodata.msname = (char *)malloc(sizeof(char) * (strlen(table_name)-1));
     snprintf(iodata.msname, strlen(table_name)-1, "%s", table_name);
     iodata.msname[strlen(table_name)-1] = '\0';
-
-    if (Data::SkyModel && Clusters) {
+    if (Data::SkyModel && Data::Clusters) {
         cout << "Using SkyModel: " << Data::SkyModel << ", Clusters: " << Clusters << ", table_name: " << iodata.msname << endl;
     } else {
         cout << "ERROR,  SkyModel: " << Data::SkyModel << ", Clusters: " << Clusters << ", table_name: " << iodata.msname << endl;
@@ -148,9 +148,9 @@ int aux_reader(dlg_app_info *app) {
 
     /*------------------------------------output----------------------------------------------------------------------*/
 
-    dump_iodata_dn(app->outputs, &iodata);
+    dump_iodata_dn(&(app->outputs[0]), &iodata);
     if (Data::doBeam) {
-        dump_beam_dn(app->outputs, &iodata, &beam);
+        dump_beam_dn(&(app->outputs[0]), &iodata, &beam);
     }
 
     /*------------------------------------free ----------------------------------------------------------------------*/

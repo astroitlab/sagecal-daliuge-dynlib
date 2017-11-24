@@ -18,14 +18,13 @@ int admm_slave(dlg_app_info *app) {
     Data::MPIData mpiData;
 
     int len = 0;
-    app->inputs->read((char *)&len, sizeof(int));
+    app->inputs[0].read((char *)&len, sizeof(int));
     if(len != 0) {
-        load_mpidata_dn_noprefix(app->inputs, &mpiData);
-        load_iodata_dn(++(app->inputs), &iodata);
-        --(app->inputs);
+        load_mpidata_dn_noprefix(&(app->inputs[0]), &mpiData);
+        load_iodata_dn(&(app->inputs[1]), &iodata);
     } else {
-        load_iodata_dn_noprefix(app->inputs, &iodata);
-        load_mpidata_dn(++(app->inputs), &mpiData);
+        load_iodata_dn_noprefix(&(app->inputs[0]), &iodata);
+        load_mpidata_dn(&(app->inputs[1]), &mpiData);
     }
 
     cout << "[admm_slave]===, iodata.N/M/Mt:" << iodata.N << "/" << iodata.M  << "/" << iodata.Mt << ", iodata.freq0:" << iodata.freq0/ 1e6<< "Mhz" << endl;

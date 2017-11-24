@@ -16,6 +16,7 @@ int write_z_master(dlg_app_info *app) {
     int first_iter = get_last_iter(app->uid);
     Data::MPIData iodata;
     load_share_mpidata(Data::shareDir, &iodata);
+    int flag = 2;
 
     FILE *sfp = 0;
     if (solfile) {
@@ -33,6 +34,7 @@ int write_z_master(dlg_app_info *app) {
         fprintf(sfp, "%lf %d %d %d %d\n", iodata.freq0 * 1e-6, Npoly, iodata.N, iodata.Mo, iodata.M);
         fclose(sfp);
         delete[] iodata.freqs;
+        app->outputs[0].write((char *)&flag, sizeof(int));
         cout << "[write_z_master]=======, Done." << endl;
         return 0;
     }
@@ -75,7 +77,6 @@ int write_z_master(dlg_app_info *app) {
     }
 
     /*-------------------------------------------output---------------- ----------------------------------------------*/
-    int flag = 2;
     app->outputs[0].write((char *)&flag, sizeof(int));
     /*-------------------------------------------free  ---------------------------------------------------------------*/
     delete[] iodata.freqs;

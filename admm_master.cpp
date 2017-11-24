@@ -35,7 +35,7 @@ int admm_master(dlg_app_info *app) {
 
     for (unsigned int cm = 0; cm < app->n_inputs; cm++) {
         Data::IOData data;
-        load_iodata_dn((app->inputs)++, &data);
+        load_iodata_dn(&(app->inputs[cm]), &data);
 
         cout << "Slave [" << data.msname << "] N=" << data.N << " M/Mt=" << data.M << "/" << data.Mt << " tilesz="
              << data.tilesz << " totaltime=" << data.totalt << " Freq=" << data.freq0 / 1e6<< "Mhz"<< endl;

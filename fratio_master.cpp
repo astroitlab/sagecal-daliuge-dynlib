@@ -68,6 +68,7 @@ int fratio_master(dlg_app_info *app) {
     int flag = 0;
     for (unsigned int cm = 0; cm < app->n_inputs; cm++) {
         app->inputs[cm].read((char *)&flag, sizeof(int));
+        cout << "[fratio_master]======= flag:" << flag << endl;
         if (flag == 0) {
             Data::IOData data;
             load_iodata_dn_noprefix(&(app->inputs[cm]), &data);

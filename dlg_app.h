@@ -22,17 +22,12 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 // MA 02111-1307  USA
 //
-#ifndef __DLG_APP_H__
-#define __DLG_APP_H__
+#ifndef DLG_APP_H
+#define DLG_APP_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-typedef struct _app_data {
-	char func[40];
-	char cmdfile[200];
-} app_data;
 
 /**
  * The different status a data drop can be found at.
@@ -64,6 +59,7 @@ typedef enum _app_status {
 typedef struct _dlg_input_info {
 	char *uid;
 	char *oid;
+	char *name;
 	drop_status status;
 	size_t (*read)(char *buf, size_t n);
 } dlg_input_info;
@@ -77,6 +73,7 @@ typedef struct _dlg_input_info {
 typedef struct _dlg_streaming_input_info {
 	char *uid;
 	char *oid;
+	char *name;
 } dlg_streaming_input_info;
 
 /**
@@ -86,6 +83,7 @@ typedef struct _dlg_streaming_input_info {
 typedef struct _dlg_output_info {
 	char *uid;
 	char *oid;
+	char *name;
 	size_t (*write)(const char *buf, size_t n);
 } dlg_output_info;
 
@@ -99,7 +97,7 @@ typedef struct _dlg_output_info {
  * a data pointer holds application-specific data.
  */
 typedef struct _dlg_app_info {
-    char *appname;
+	char *appname;
 	char *uid;
 	char *oid;
 	dlg_input_info *inputs;
@@ -160,5 +158,4 @@ void drop_completed(dlg_app_info *app, const char *uid, drop_status status);
 #ifdef __cplusplus
 }
 #endif
-
-#endif //__DLG_APP_H__
+#endif

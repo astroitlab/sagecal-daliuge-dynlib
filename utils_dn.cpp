@@ -2,9 +2,9 @@
 #include <stdio.h>
 
 void dump_iodata_dn(dlg_output_info *output, Data::IOData *iodata) {
+
     int len = 0;
     output->write((char *)&len, sizeof(int));/* this is a flag that indicate share-data file 0*/
-
     output->write((char *)&(iodata->M), sizeof(int));
     output->write((char *)&(iodata->Mt), sizeof(int));
 
