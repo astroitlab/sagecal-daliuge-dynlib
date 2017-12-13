@@ -1,4 +1,3 @@
-OUTPUT=
 CXX=g++
 CXXFLAGS=-O3 -Wall -g -fPIC
 CASA_LIBDIR=/usr/local/lib
@@ -70,12 +69,10 @@ dlg_app_master.o: dlg_app_master.cpp dlg_app.h
 OBJS_SLAVE = dlg_app_slave.o aux_reader.o admm_slave.o fratio_slave.o coh_slave.o sagefit_slave.o update_y_slave.o write_residual_slave.o data.o utils.o utils_dn.o
 lib_slave: ${OBJS_SLAVE} ./lib/libsagecal.a
 	$(CXX) -shared -o libsagecal_slave.so ${OBJS_SLAVE} $(MY_LIBS) $(LAPACK) $(CASA_LIBS) $(GLIBL) $(LIBPATH)
-	cp libsagecal_slave.so /astrodata/sagecal/build/bin
 
 OBJS_MASTER = dlg_app_master.o admm_master.o fratio_master.o update_z_master.o write_z_master.o data.o utils.o utils_dn.o
 lib_master: ${OBJS_MASTER}
 	$(CXX) -shared -o libsagecal_master.so ${OBJS_MASTER} $(MY_LIBS) $(LAPACK) $(CASA_LIBS) $(GLIBL) $(LIBPATH)
-	cp libsagecal_master.so /astrodata/sagecal/build/bin
 
 all: lib_slave lib_master
 clean:
