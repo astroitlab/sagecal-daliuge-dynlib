@@ -30,12 +30,11 @@ int write_residual_slave(dlg_app_info *app) {
 
     int flag = 3;
     app->inputs[0].read((char *)&flag, sizeof(int)); /*--skip flag--*/
-    cout << "[write_residual_slave]========, skip flag:" << flag << endl;
 
     load_iodata_dn(&(app->inputs[0]),&old_iodata);
     load_share_iodata(Data::shareDir, old_iodata.msname, &iodata);
 
-    cout << "[write_residual_slave]========, iodata.N/M/Mt/Nms:" << iodata.N << "/" << iodata.M  << "/" << iodata.Mt << "/" << iodata.Nms
+    cout << "[write_residual_slave]======"<< iodata.msname << ", iodata.N/M/Mt/Nms:" << iodata.N << "/" << iodata.M  << "/" << iodata.Mt << "/" << iodata.Nms
          << ", iodata.freq0:" << iodata.freq0/ 1e6<< "Mhz" << endl;
     Data::freeData(old_iodata);
 
