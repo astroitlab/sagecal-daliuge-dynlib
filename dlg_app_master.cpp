@@ -114,7 +114,7 @@ int init(dlg_app_info *app, const char ***params) {
 int run(dlg_app_info *app) {
     struct timeval start, end;
     gettimeofday(&start, NULL);
-    printf("====================master begin run %s, [%s]====================\n", app->uid, to_app_data(app)->func);
+    // printf("====================master begin run %s, [%s]====================\n", app->uid, to_app_data(app)->func);
     Data::func = to_app_data(app)->func;
     Data::cmdFile = to_app_data(app)->cmdfile;
     ParseCmdLine();

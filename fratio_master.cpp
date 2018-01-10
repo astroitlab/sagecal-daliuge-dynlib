@@ -38,9 +38,7 @@ int fratio_master(dlg_app_info *app) {
         fread(&msIndex, sizeof(struct MsIndex), 1, sp);
         msIndexs.push_back(msIndex);
     }
-    for (unsigned int cm = 0; cm < msIndexs.size(); cm++) {
-        cout << "[fratio_master]=======, msindex:," <<msIndexs[cm].cm << "," << msIndexs[cm].ms << endl;
-    }
+ 
     if (sp) {
         fclose(sp);
     }

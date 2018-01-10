@@ -13,7 +13,7 @@ using namespace Data;
 
 int fratio_slave(dlg_app_info *app) {
     /*-----------------------------------------------input------------------------------------------------------------*/
-    Data::IOData old_iodata, iodata;
+    Data::IOData iodata;
     Data::LBeam beam;
     Data::MPIData mpiData;
 
@@ -22,14 +22,13 @@ int fratio_slave(dlg_app_info *app) {
     int flag = 0;
     app->inputs[0].read((char *)&flag, sizeof(int));
     if (flag != 0) {
-        load_iodata_dn(&(app->inputs[1]), &old_iodata);
+        load_iodata_dn(&(app->inputs[1]), &iodata);
         load_mpidata_dn(&(app->inputs[1]),&mpiData);
     } else {
-        load_iodata_dn_noprefix(&(app->inputs[0]), &old_iodata);
+        load_iodata_dn_noprefix(&(app->inputs[0]), &iodata);
         load_mpidata_dn(&(app->inputs[0]),&mpiData);
     }
 
-    load_share_iodata(Data::shareDir, old_iodata.msname, &iodata);
     cout << "[fratio_slave]========, iodata.N/M/Mt/Nms:" << iodata.N << "/" << iodata.M  << "/" << iodata.Mt << "/" << iodata.Nms
         << ", iodata.freq0:" << iodata.freq0/ 1e6<< "Mhz" << endl;
 
@@ -53,9 +52,9 @@ int fratio_slave(dlg_app_info *app) {
 
     if(sources_precessed!=0) {
         if (!Data::doBeam) {
-            Data::loadData(msitr[0]->table(), old_iodata, &old_iodata.fratio);
+            Data::loadData(msitr[0]->table(), iodata, &iodata.fratio);
         } else {
-            Data::loadData(msitr[0]->table(), old_iodata, beam, &old_iodata.fratio);
+            Data::loadData(msitr[0]->table(), iodata, beam, &iodata.fratio);
         }
         Data::writeData(msitr[0]->table(), iodata);
         /* advance to next data chunk */
@@ -63,13 +62,14 @@ int fratio_slave(dlg_app_info *app) {
             for(int it=0;it<sources_precessed;it++)
                 (*msitr[cm])++;
         }
+    } else {
+        if (!Data::doBeam) {
+            Data::loadData(msitr[0]->table(), iodata, &iodata.fratio);
+        } else {
+            Data::loadData(msitr[0]->table(), iodata, beam, &iodata.fratio);
+        }   
     }
 
-    if (!Data::doBeam) {
-        Data::loadData(msitr[0]->table(), iodata, &iodata.fratio);
-    } else {
-        Data::loadData(msitr[0]->table(), iodata, beam, &iodata.fratio);
-    }
     /*----------------------------------------------------------------------------------------------------------------*/
     /* downweight factor for regularization, depending on amount of data flagged,
        0.0 means all data are flagged */
@@ -97,7 +97,7 @@ int fratio_slave(dlg_app_info *app) {
     } else {
         Data::freeData(iodata, beam);
     }
-    Data::freeData(old_iodata);
+
     delete[] mpiData.freqs;
     cout << "[fratio_slave]========, Done." << endl;
     return 0;
