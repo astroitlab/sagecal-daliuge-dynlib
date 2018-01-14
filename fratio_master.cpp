@@ -66,7 +66,6 @@ int fratio_master(dlg_app_info *app) {
     int flag = 0;
     for (unsigned int cm = 0; cm < app->n_inputs; cm++) {
         app->inputs[cm].read((char *)&flag, sizeof(int));
-        cout << "[fratio_master]======= flag:" << flag << endl;
         if (flag == 0) {
             Data::IOData data;
             load_iodata_dn_noprefix(&(app->inputs[cm]), &data);
@@ -77,7 +76,6 @@ int fratio_master(dlg_app_info *app) {
             ms_short_name(ms_full_name, short_name);
             for (unsigned int sm = 0; sm < msIndexs.size(); sm++) {
                 if(strcmp(short_name, msIndexs[sm].ms)==0) {
-                    cout << "[fratio_master]=======, find:" << msIndexs[sm].ms << ", idx:" << sm << endl;
                     fratio[msIndexs[sm].cm] = data.fratio;
                     break;
                 }
