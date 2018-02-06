@@ -1,4 +1,0 @@
-/mnt/astrodata/sagecal/data/sm.ms.1
-/mnt/astrodata/sagecal/data/sm.ms.2
-/mnt/astrodata/sagecal/data/sm.ms.3
-/mnt/astrodata/sagecal/data/sm.ms.4
