@@ -184,7 +184,7 @@ int init(dlg_app_info *app, const char ***params)
 int run(dlg_app_info *app) {
     struct timeval start, end;
     gettimeofday(&start, NULL);
-    // printf("------------------slave begin run %s, [%s]------------------\n", app->uid, to_app_data(app)->func);
+    printf("------------------slave begin run %s, [%s]------------------\n", app->uid, to_app_data(app)->func);
     ParseCmdLine(to_app_data(app)->cmdfile);
 
     double duration = 0.;
@@ -215,6 +215,7 @@ int run(dlg_app_info *app) {
 }
 
 void drop_completed(dlg_app_info *app, const char *uid, drop_status status) {
+    printf("slave trigger....drop_completed\n");
     app->done(APP_FINISHED);
     free(app->data);
 }

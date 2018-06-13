@@ -40,7 +40,7 @@ void load_share_iodata(char *shareDir, char *msname, Data::IOData *iodata){
 void dump_iodata(FILE *op, Data::IOData *iodata) {
     int len = 0;
     fwrite(&len, sizeof(int), 1, op);/* this is a flag that indicate share-data file 0*/
-
+    fwrite(&len, sizeof(int), 1, op); /* so as to equal...*/
     fwrite(&(iodata->M), sizeof(int), 1, op);
     fwrite(&(iodata->Mt), sizeof(int), 1, op);
 
@@ -95,7 +95,7 @@ void dump_iodata(FILE *op, Data::IOData *iodata) {
 void load_iodata(FILE *op, Data::IOData *iodata){
     int len = 0;
     fread(&len, sizeof(int), 1, op);/*skip flag*/
-
+    fread(&len, sizeof(int), 1, op);/*skip flag*/
     fread(&(iodata->M), sizeof(int), 1, op);
     fread(&(iodata->Mt), sizeof(int), 1, op);
 
@@ -191,6 +191,8 @@ void load_share_beam(char *shareDir, char *msname, Data::LBeam *lBeam){
 void dump_beam(FILE *op, Data::IOData *iodata, Data::LBeam *lBeam){
 
     int len = iodata->tilesz;
+
+    fwrite(&len, sizeof(int), 1, op);/* fake total_len for keeping with dynlib*/
     fwrite(&len, sizeof(int), 1, op);
     fwrite(lBeam->time_utc, sizeof(double), len, op);
 
@@ -218,6 +220,7 @@ void dump_beam(FILE *op, Data::IOData *iodata, Data::LBeam *lBeam){
 }
 void load_beam(FILE *op, Data::LBeam *lBeam){
     int len = 0;
+    fread(&len, sizeof(int), 1, op);
     fread(&len, sizeof(int), 1, op);
     lBeam->time_utc = new double[len];
     fread(lBeam->time_utc, sizeof(double), len, op);
@@ -412,9 +415,9 @@ void load_share_mpidata(char *shareDir, Data::MPIData *iodata) {
 }
 
 void dump_mpidata(FILE *op, Data::MPIData *iodata) {
-    int len = 1;
+    int len = 1, total_len = 0;
     fwrite(&len, sizeof(int), 1, op);/* this is a flag that indicate master share-data file 1*/
-
+    fwrite(&total_len, sizeof(int), 1, op);
     fwrite(&(iodata->N), sizeof(int), 1, op);
     fwrite(&(iodata->M), sizeof(int), 1, op);
     fwrite(&(iodata->tilesz), sizeof(int), 1, op);
@@ -432,7 +435,8 @@ void dump_mpidata(FILE *op, Data::MPIData *iodata) {
 void load_mpidata(FILE *op, Data::MPIData *iodata) {
     int len = 0;
     fread(&len, sizeof(int), 1, op);/*skip flag*/
-
+    fread(&len, sizeof(int), 1, op);
+    
     fread(&(iodata->N), sizeof(int), 1, op);
     fread(&(iodata->M), sizeof(int), 1, op);
     fread(&(iodata->tilesz), sizeof(int), 1, op);
