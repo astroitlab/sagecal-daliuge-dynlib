@@ -45,8 +45,6 @@ int admm_slave(dlg_app_info *app) {
 
     /*------------------------------------output----------------------------------------------------------------------*/
     dump_iodata_dn(&(app->outputs[0]), &iodata);
-    dump_mpidata_dn(&(app->outputs[0]), &mpiData);
-    app->outputs[0].write((char *)arho, sizeof(double) * mpiData.Mo);
     /*--------------------------------------------  share -------------------------------------------------------*/
     write_share_XYZ(Data::shareDir, iodata.msname, arho, iodata.M, "arho");
     write_share_XYZ(Data::shareDir, iodata.msname, arho0, iodata.M, "arho0");

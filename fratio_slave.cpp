@@ -19,18 +19,12 @@ int fratio_slave(dlg_app_info *app) {
 
     int sources_precessed = get_last_iter(app->uid);
     openblas_set_num_threads(1);
-    int flag = 0;
-    app->inputs[0].read((char *)&flag, sizeof(int));
-    if (flag != 0) {
-        load_iodata_dn(&(app->inputs[1]), &iodata);
-        load_mpidata_dn(&(app->inputs[1]),&mpiData);
-    } else {
-        load_iodata_dn_noprefix(&(app->inputs[0]), &iodata);
-        load_mpidata_dn(&(app->inputs[0]),&mpiData);
-    }
+
+    load_iodata_dn(&(app->inputs[0]), &iodata);
+    load_share_mpidata(Data::shareDir, &mpiData);
 
     cout << "[fratio_slave]========, iodata.N/M/Mt/Nms:" << iodata.N << "/" << iodata.M  << "/" << iodata.Mt << "/" << iodata.Nms
-        << ", iodata.freq0:" << iodata.freq0/ 1e6<< "Mhz" << endl;
+        << ", iodata.freq0:" << iodata.freq0/ 1e6<< "Mhz,msname:" << iodata.msname << "," << endl;
 
     if (Data::doBeam) {
         load_share_beam(Data::shareDir,iodata.msname, &beam);
@@ -41,7 +35,6 @@ int fratio_slave(dlg_app_info *app) {
     sort[0] = MS::TIME; /* note: only sort over TIME for ms iterator to work */
     vector < MSIter * > msitr;
     vector < MeasurementSet * > msvector;
-
     MeasurementSet *ms = new MeasurementSet(iodata.msname, Table::Update);
     MSIter *mi = new MSIter(*ms, sort, iodata.deltat * (double) iodata.tilesz);
     msitr.push_back(mi);
@@ -49,7 +42,6 @@ int fratio_slave(dlg_app_info *app) {
     for (int cm = 0; cm < iodata.Nms; cm++) {
         msitr[cm]->origin();
     }
-
     if(sources_precessed!=0) {
         if (!Data::doBeam) {
             Data::loadData(msitr[0]->table(), iodata, &iodata.fratio);
@@ -69,7 +61,6 @@ int fratio_slave(dlg_app_info *app) {
             Data::loadData(msitr[0]->table(), iodata, beam, &iodata.fratio);
         }   
     }
-
     /*----------------------------------------------------------------------------------------------------------------*/
     /* downweight factor for regularization, depending on amount of data flagged,
        0.0 means all data are flagged */

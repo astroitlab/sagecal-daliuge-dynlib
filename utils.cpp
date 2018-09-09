@@ -1,7 +1,15 @@
 #include "utils.h"
 #include <stdio.h>
+#include <sys/time.h>
+
+unsigned long usecs(struct timeval *start, struct timeval *end) {
+    return (end->tv_sec - start->tv_sec) * 1000000 + (end->tv_usec - start->tv_usec);
+}
 
 void dump_share_iodata(char *shareDir, char *msname, Data::IOData *iodata) {
+    struct timeval start, end;
+    gettimeofday(&start, NULL);
+
     char short_name[64], ms_full_name[256];
     sprintf(ms_full_name,"%s", msname);
     ms_short_name(ms_full_name,short_name);
@@ -18,8 +26,14 @@ void dump_share_iodata(char *shareDir, char *msname, Data::IOData *iodata) {
 
     if(op)
         fclose(op);
+
+    gettimeofday(&end, NULL);
+    printf("share_data,dump,iodata,%.3f\n",usecs(&start, &end) / 1000000.);
 }
 void load_share_iodata(char *shareDir, char *msname, Data::IOData *iodata){
+    struct timeval start, end;
+    gettimeofday(&start, NULL);
+
     char short_name[64], ms_full_name[256];
     sprintf(ms_full_name,"%s", msname);
     ms_short_name(ms_full_name,short_name);
@@ -36,6 +50,9 @@ void load_share_iodata(char *shareDir, char *msname, Data::IOData *iodata){
 
     if(op)
         fclose(op);
+
+    gettimeofday(&end, NULL);
+    printf("share_data,load,iodata,%.3f\n",usecs(&start, &end) / 1000000.);
 }
 void dump_iodata(FILE *op, Data::IOData *iodata) {
     int len = 0;
@@ -154,6 +171,9 @@ void load_iodata(FILE *op, Data::IOData *iodata){
 }
 
 void dump_share_beam(char *shareDir, char *msname, Data::IOData *iodata, Data::LBeam *lBeam){
+    struct timeval start, end;
+    gettimeofday(&start, NULL);
+
     char short_name[64], ms_full_name[256];
     sprintf(ms_full_name,"%s", msname);
     ms_short_name(ms_full_name,short_name);
@@ -170,8 +190,15 @@ void dump_share_beam(char *shareDir, char *msname, Data::IOData *iodata, Data::L
 
     if(op)
         fclose(op);
+
+
+    gettimeofday(&end, NULL);
+    printf("share_data,dump,beam,%.3f\n",usecs(&start, &end) / 1000000.);
 }
 void load_share_beam(char *shareDir, char *msname, Data::LBeam *lBeam){
+    struct timeval start, end;
+    gettimeofday(&start, NULL);
+
     char short_name[64], ms_full_name[256];
     sprintf(ms_full_name,"%s", msname);
     ms_short_name(ms_full_name,short_name);
@@ -187,6 +214,9 @@ void load_share_beam(char *shareDir, char *msname, Data::LBeam *lBeam){
     load_beam(op,lBeam);
     if(op)
         fclose(op);
+
+    gettimeofday(&end, NULL);
+    printf("share_data,load,beam,%.3f\n",usecs(&start, &end) / 1000000.);
 }
 void dump_beam(FILE *op, Data::IOData *iodata, Data::LBeam *lBeam){
 
@@ -259,6 +289,9 @@ void load_beam(FILE *op, Data::LBeam *lBeam){
 }
 
 void dump_share_barr(char *shareDir, char *msname, Data::IOData *iodata, baseline_t *barr){
+    struct timeval start, end;
+    gettimeofday(&start, NULL);
+
     char short_name[64], ms_full_name[256];
     sprintf(ms_full_name,"%s", msname);
     ms_short_name(ms_full_name,short_name);
@@ -274,9 +307,15 @@ void dump_share_barr(char *shareDir, char *msname, Data::IOData *iodata, baselin
     dump_barr(op, iodata, barr);
     if(op)
         fclose(op);
+
+    gettimeofday(&end, NULL);
+    printf("share_data,dump,barr,%.3f\n",usecs(&start, &end) / 1000000.);
 }
 
 void load_share_barr(char *shareDir, char *msname, Data::IOData *iodata, baseline_t *barr){
+    struct timeval start, end;
+    gettimeofday(&start, NULL);
+
     char short_name[64], ms_full_name[256];
     sprintf(ms_full_name,"%s", msname);
     ms_short_name(ms_full_name,short_name);
@@ -292,6 +331,9 @@ void load_share_barr(char *shareDir, char *msname, Data::IOData *iodata, baselin
     load_barr(op, iodata, barr);
     if(op)
         fclose(op);
+
+    gettimeofday(&end, NULL);
+    printf("share_data,load,barr,%.3f\n",usecs(&start, &end) / 1000000.);
 }
 void dump_barr(FILE *op, Data::IOData *iodata, baseline_t *barr){
     for(int i=0;i<iodata->Nbase * iodata->tilesz;i++) {
@@ -317,6 +359,9 @@ void load_coh(FILE *op, Data::IOData *iodata, complex double *coh) {
 }
 
 void dump_share_coh(char *shareDir, char *msname, Data::IOData *iodata, complex double *coh) {
+    struct timeval start, end;
+    gettimeofday(&start, NULL);
+
     char short_name[64], ms_full_name[256];
     sprintf(ms_full_name,"%s", msname);
     ms_short_name(ms_full_name,short_name);
@@ -332,9 +377,15 @@ void dump_share_coh(char *shareDir, char *msname, Data::IOData *iodata, complex 
     dump_coh(op, iodata, coh);
     if(op)
         fclose(op);
+
+    gettimeofday(&end, NULL);
+    printf("share_data,dump,coh,%.3f\n",usecs(&start, &end) / 1000000.);
 }
 
 void load_share_coh(char *shareDir, char *msname, Data::IOData *iodata, complex double *coh) {
+    struct timeval start, end;
+    gettimeofday(&start, NULL);
+
     char short_name[64], ms_full_name[256];
     sprintf(ms_full_name,"%s", msname);
     ms_short_name(ms_full_name,short_name);
@@ -350,8 +401,14 @@ void load_share_coh(char *shareDir, char *msname, Data::IOData *iodata, complex 
     load_coh(op, iodata, coh);
     if(op)
         fclose(op);
+
+    gettimeofday(&end, NULL);
+    printf("share_data,load,coh,%.3f\n",usecs(&start, &end) / 1000000.);
 }
 void dump_share_mpidata(char *shareDir, Data::MPIData *iodata) {
+    struct timeval start, end;
+    gettimeofday(&start, NULL);
+
     char shareFile[256];
     sprintf(shareFile,"%s/v.share.mpidata", shareDir);
 
@@ -364,6 +421,8 @@ void dump_share_mpidata(char *shareDir, Data::MPIData *iodata) {
     dump_mpidata(op, iodata);
     if(op)
         fclose(op);
+    gettimeofday(&end, NULL);
+    printf("share_data,dump,mpidata,%.3f\n",usecs(&start, &end) / 1000000.);
 }
 void s_dump_data(char *oFile,Data::IOData *iodata, Data::LBeam *lBeam, clus_source_t **carr, baseline_t *barr) {
     FILE *op = 0;
@@ -400,6 +459,9 @@ void s_load_data(char *iFile,Data::IOData *iodata, Data::LBeam *lBeam, clus_sour
 }
 
 void load_share_mpidata(char *shareDir, Data::MPIData *iodata) {
+    struct timeval start, end;
+    gettimeofday(&start, NULL);
+
     char shareFile[256];
     sprintf(shareFile,"%s/v.share.mpidata", shareDir);
 
@@ -412,6 +474,9 @@ void load_share_mpidata(char *shareDir, Data::MPIData *iodata) {
     load_mpidata(op, iodata);
     if(op)
         fclose(op);
+
+    gettimeofday(&end, NULL);
+    printf("share_data,load,mpidata,%.3f\n",usecs(&start, &end) / 1000000.);
 }
 
 void dump_mpidata(FILE *op, Data::MPIData *iodata) {
@@ -506,6 +571,9 @@ int get_data_flag(char *fileName) {
 }
 
 void read_share_XYZ(char *shareDir, char *msname, double *Y, int len, const char *XYZ) {
+    struct timeval start, end;
+    gettimeofday(&start, NULL);
+
     char short_name[64], ms_full_name[256];
     sprintf(ms_full_name,"%s", msname);
     ms_short_name(ms_full_name,short_name);
@@ -526,9 +594,14 @@ void read_share_XYZ(char *shareDir, char *msname, double *Y, int len, const char
     if (sp) {
         fclose(sp);
     }
+    gettimeofday(&end, NULL);
+    printf("share_data,load,XYZ,%.3f\n",usecs(&start, &end) / 1000000.);
 }
 
 void write_share_XYZ(char *shareDir, char *msname, double *Y, int len, const char *XYZ) {
+    struct timeval start, end;
+    gettimeofday(&start, NULL);
+
     char short_name[64], ms_full_name[256];
     sprintf(ms_full_name,"%s", msname);
     ms_short_name(ms_full_name,short_name);
@@ -545,9 +618,14 @@ void write_share_XYZ(char *shareDir, char *msname, double *Y, int len, const cha
     if (sp) {
         fclose(sp);
     }
+    gettimeofday(&end, NULL);
+    printf("share_data,dump,XYZ,%.3f\n",usecs(&start, &end) / 1000000.);
 }
 
 void dump_share_res(char *shareDir, char *msname, int *start_iter, double *res_0, double *res_1, double *res_00, double *res_01, double *mean_nu, int *tilex) {
+    struct timeval start, end;
+    gettimeofday(&start, NULL);
+
     char short_name[64], ms_full_name[256];
     sprintf(ms_full_name,"%s", msname);
     ms_short_name(ms_full_name,short_name);
@@ -570,9 +648,15 @@ void dump_share_res(char *shareDir, char *msname, int *start_iter, double *res_0
     if (sp) {
         fclose(sp);
     }
+
+    gettimeofday(&end, NULL);
+    printf("share_data,dump,res,%.3f\n",usecs(&start, &end) / 1000000.);
 }
 
 void load_share_res(char *shareDir, char *msname, int *start_iter, double *res_0, double *res_1, double *res_00, double *res_01, double *mean_nu, int *tilex) {
+    struct timeval start, end;
+    gettimeofday(&start, NULL);
+
     char short_name[64], ms_full_name[256];
     sprintf(ms_full_name,"%s", msname);
     ms_short_name(ms_full_name,short_name);
@@ -595,4 +679,7 @@ void load_share_res(char *shareDir, char *msname, int *start_iter, double *res_0
     if (sp) {
         fclose(sp);
     }
+
+    gettimeofday(&end, NULL);
+    printf("share_data,load,res,%.3f\n",usecs(&start, &end) / 1000000.);    
 }

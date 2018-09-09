@@ -18,7 +18,7 @@ using namespace Data;
 
 int write_residual_slave(dlg_app_info *app) {
     /*-----------------------------------------------input------------------------------------------------------------*/
-    Data::IOData iodata, old_iodata;
+    Data::IOData iodata;
     baseline_t *barr;
     Data::LBeam beam;
     int sources_precessed = get_last_iter(app->uid);
@@ -31,12 +31,10 @@ int write_residual_slave(dlg_app_info *app) {
     int flag = 3;
     app->inputs[0].read((char *)&flag, sizeof(int)); /*--skip flag--*/
 
-    load_iodata_dn(&(app->inputs[0]),&old_iodata);
-    load_share_iodata(Data::shareDir, old_iodata.msname, &iodata);
+    load_iodata_dn(&(app->inputs[0]),&iodata);
 
     cout << "[write_residual_slave]======"<< iodata.msname << ", iodata.N/M/Mt/Nms:" << iodata.N << "/" << iodata.M  << "/" << iodata.Mt << "/" << iodata.Nms
          << ", iodata.freq0:" << iodata.freq0/ 1e6<< "Mhz" << endl;
-    Data::freeData(old_iodata);
 
     if (Data::doBeam) {
         load_share_beam(Data::shareDir, iodata.msname, &beam);
@@ -211,8 +209,7 @@ int write_residual_slave(dlg_app_info *app) {
     }
     dump_share_barr(Data::shareDir,iodata.msname,&iodata,barr);
     /*--------------------------------------------output---------------------------------------------------------------*/
-    flag = 2;
-    app->outputs[0].write((char *)&flag, sizeof(int));
+    dump_iodata_dn(&(app->outputs[0]), &iodata);
     /*------------------------------------free ----------------------------------------------------------------------*/
 
     /* free data memory */
